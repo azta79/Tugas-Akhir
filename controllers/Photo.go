@@ -45,7 +45,6 @@ func CreatePhoto(c *gin.Context) {
         PhotoURL:  reqBody.PhotoURL,
         UserID:    userID,
         CreatedAt: time.Now(),
-        UpdatedAt: time.Now(), // Set UpdatedAt menjadi nil saat membuat foto baru
     }
 
     // Menyimpan photo baru ke dalam database
@@ -54,9 +53,20 @@ func CreatePhoto(c *gin.Context) {
         return
     }
 
+    // Membuat map untuk respons JSON dengan urutan yang diinginkan
+    response := map[string]interface{}{
+        "id":         newPhoto.ID,
+        "title":      newPhoto.Title,
+        "caption":    newPhoto.Caption,
+        "photo_url":  newPhoto.PhotoURL,
+        "user_id":    newPhoto.UserID,
+        "created_at": newPhoto.CreatedAt,
+    }
+
     // Mengirim respons 201 Created dengan data photo yang baru dibuat
-    c.JSON(http.StatusCreated, newPhoto)
+    c.JSON(http.StatusCreated, response)
 }
+
 
 
 func GetPhotos(c *gin.Context) {
